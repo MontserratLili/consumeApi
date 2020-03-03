@@ -139,6 +139,12 @@ export default {
       visible: ""
     };
   },
+  mounted () {
+    const todos = JSON.parse(this.$localStorage.get('usuarios'))
+    if (todos) {
+      this.usuarios = todos
+    }
+  },
   methods: {
     iniciarSesion() {
       console.log(this.mail);
@@ -167,6 +173,8 @@ export default {
         email: this.email,
         password: this.password
       });
+      console.log(this.usuarios)
+      this.$localStorage.set('usuarios', JSON.stringify(this.usuarios))
       this.email = "";
       this.password = "";
     },
@@ -175,20 +183,20 @@ export default {
       this.nombreActualizar = this.usuarios[usuario].email;
       this.passwordActualizar = this.usuarios[usuario].password;
       this.formActualizar = true;
+      this.$localStorage.set('usuarios', JSON.stringify(this.usuarios))
     },
     borrarUsuario(usuario) {
       this.usuarios.splice(usuario, 1);
+      this.$localStorage.set('usuarios', JSON.stringify(this.usuarios))
     },
     guardarAct(usuario) {
       this.formActualizar = false;
       this.usuarios[usuario].email = this.nombreActualizar;
       this.usuarios[usuario].password = this.passwordActualizar;
+      this.$localStorage.set('usuarios', JSON.stringify(this.usuarios))
     }
   }
 };
 </script>
 <style scoped>
-    .visible{
-        display: "none";
-    }
 </style>

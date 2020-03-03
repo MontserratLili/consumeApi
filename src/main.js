@@ -6,6 +6,8 @@ import firebase from 'firebase'
 
 Vue.config.productionTip = false
 let app = '';
+import VueLocalStorage from 'vue-localstorage'
+Vue.use(VueLocalStorage)
 
 const firebaseConfig = {
   apiKey: "AIzaSyAZKLbaNmL12aK4cqpe8X8TKtsbTR5mps0",
