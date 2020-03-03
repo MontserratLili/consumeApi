@@ -1,0 +1,41 @@
+{
+  "usuarios": [
+    {
+      "id": 3,
+      "email": "a",
+      "password": "a"
+    },
+    {
+      "id": 4,
+      "email": "b",
+      "password": "b"
+    },
+    {
+      "id": 5,
+      "email": "a",
+      "password": "a"
+    },
+    {
+      "id": 6,
+      "email": "",
+      "password": ""
+    },
+    {
+      "password": "",
+      "id": 7
+    },
+    {
+      "password": "",
+      "id": 8
+    },
+    {
+      "password": "a",
+      "id": 9
+    },
+    {
+      "id": 10,
+      "email": "qw",
+      "password": "qw"
+    }
+  ]
+}
