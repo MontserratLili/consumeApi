@@ -22,6 +22,9 @@
         <v-btn color="primary" small @click="iniciarSesion()"
           >Iniciar Sesion
         </v-btn>
+        <v-btn color="primary" small @click="listarUsuarios()"
+          >Listar Usuarios
+        </v-btn>
         <v-spacer></v-spacer>
       </v-col>
     </v-row>
@@ -56,10 +59,10 @@
     <v-row>
       <v-col cols="12" sm="6" offset-sm="3">
         <thead>
-            <tr>
-          <th>Id</th>
-          <th>Email</th>
-          <th>Password</th>
+          <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Password</th>
           </tr>
         </thead>
         <tr v-for="(usuario, index) in usuarios" :key="index">
@@ -139,10 +142,10 @@ export default {
       visible: ""
     };
   },
-  mounted () {
-    const todos = JSON.parse(this.$localStorage.get('usuarios'))
+  mounted() {
+    const todos = JSON.parse(this.$localStorage.get("usuarios"));
     if (todos) {
-      this.usuarios = todos
+      this.usuarios = todos;
     }
   },
   methods: {
@@ -156,7 +159,7 @@ export default {
         .then(
           succes => {
             console.log(succes);
-            this.$router.replace("/home");
+            //this.$router.replace("/home");
           },
           error => {
             console.log("error" + error);
@@ -167,36 +170,99 @@ export default {
             }*/
       console.log(a);
     },
+    //ya lo hace con firebase
     crearUsuario() {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.email, this.password)
+        .catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          console.log(errorCode);
+          var errorMessage = error.message;
+          console.log(errorMessage);
+          // ...
+        });
+
       this.usuarios.push({
         id: this.id + 1,
         email: this.email,
         password: this.password
       });
-      console.log(this.usuarios)
-      this.$localStorage.set('usuarios', JSON.stringify(this.usuarios))
+      console.log(this.usuarios);
+      this.$localStorage.set("usuarios", JSON.stringify(this.usuarios));
       this.email = "";
       this.password = "";
     },
     verFormAct(usuario) {
+      /*
+      //var newPassword = getASecureRandomPassword();
+      var newPassword = this.usuarios[usuario].password;
+      firebase.updatePassword(newPassword).then(function() {
+      // Update successful.
+      }).catch(function(error) {
+      // An error happened.
+        console.log(error);
+      });*/
+
       this.idActualizar = usuario;
       this.nombreActualizar = this.usuarios[usuario].email;
       this.passwordActualizar = this.usuarios[usuario].password;
       this.formActualizar = true;
-      this.$localStorage.set('usuarios', JSON.stringify(this.usuarios))
+      this.$localStorage.set("usuarios", JSON.stringify(this.usuarios));
     },
     borrarUsuario(usuario) {
       this.usuarios.splice(usuario, 1);
-      this.$localStorage.set('usuarios', JSON.stringify(this.usuarios))
+      this.$localStorage.set("usuarios", JSON.stringify(this.usuarios));
+
+      var user = firebase.auth().currentUser;
+
+      user
+        .delete()
+        .then(function() {
+          // User deleted.
+        })
+        .catch(function(error) {
+          // An error happened.
+          console.log(error);
+        });
     },
     guardarAct(usuario) {
       this.formActualizar = false;
       this.usuarios[usuario].email = this.nombreActualizar;
       this.usuarios[usuario].password = this.passwordActualizar;
-      this.$localStorage.set('usuarios', JSON.stringify(this.usuarios))
+      this.$localStorage.set("usuarios", JSON.stringify(this.usuarios));
+
+      var user = firebase.auth().currentUser;
+      console.log(user + "ok");
+      //var user = usuario;
+      //var newPassword = this.usuarios[usuario].password;
+      // console.log(newPassword)
+      user
+        .updatePassword(this.usuarios[usuario].password)
+        .then(function() {
+          // Update successful.
+          console.log(this.usuarios[usuario].password + "actualice");
+        })
+        .catch(function(error) {
+          // An error happened.
+          console.log(error);
+        });
+    },
+    listarUsuarios() {
+      var user = firebase.auth().currentUser;
+      
+      if (user != null) {
+        user.providerData.forEach(function(profile) {
+          console.log("Sign-in provider: " + profile.providerId);
+          console.log("  Provider-specific UID: " + profile.uid);
+          console.log("  Name: " + profile.displayName);
+          console.log("  Email: " + profile.email);
+          console.log("  Photo URL: " + profile.photoURL);
+        });
+      }
     }
   }
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>
